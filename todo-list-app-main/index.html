@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon_atoms.ico" type="image/x-icon">
+    <title>To-Do List | Premium Task Manager</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-icon">⚠️</div>
+            <h3 class="modal-title">Confirm Action</h3>
+            <p id="confirm-message" class="modal-message">Are you sure?</p>
+            <div class="modal-actions">
+                <button id="confirm-cancel" class="btn btn-secondary">Cancel</button>
+                <button id="confirm-ok" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal-overlay hidden">
+        <div class="modal-card edit-modal-card">
+            <h3 class="modal-title">✏️ Edit Task</h3>
+            <div class="edit-form">
+                <input type="text" id="edit-task-input" class="input-field" placeholder="Task name...">
+                <div class="edit-row">
+                    <select id="edit-priority" class="select-field">
+                        <option value="high">🔴 High</option>
+                        <option value="medium">🟡 Medium</option>
+                        <option value="low">🟢 Low</option>
+                    </select>
+                    <select id="edit-category" class="select-field">
+                        <option value="personal">👤 Personal</option>
+                        <option value="work">💼 Work</option>
+                        <option value="study">📚 Study</option>
+                        <option value="shopping">🛒 Shopping</option>
+                        <option value="health">💪 Health</option>
+                        <option value="others">📌 Others</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="edit-cancel" class="btn btn-secondary">Cancel</button>
+                <button id="edit-save" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-wrapper">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <h1 class="app-title">✔ To-Do List</h1>
+                <p id="greeting" class="greeting">Good Morning!</p>
+                <p id="current-date" class="date-text"></p>
+            </div>
+            <div class="header-right">
+                <span id="current-time" class="time-display"></span>
+                <button id="theme-toggle" class="theme-btn" title="Toggle Theme">
+                    <span id="theme-icon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Statistics Dashboard -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <span class="stat-icon">📋</span>
+                <div class="stat-info">
+                    <span id="total-tasks" class="stat-number">0</span>
+                    <span class="stat-label">Total</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">✅</span>
+                <div class="stat-info">
+                    <span id="completed-tasks" class="stat-number">0</span>
+                    <span class="stat-label">Completed</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">⏳</span>
+                <div class="stat-info">
+                    <span id="pending-tasks" class="stat-number">0</span>
+                    <span class="stat-label">Pending</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">📊</span>
+                <div class="stat-info">
+                    <span id="completion-percent" class="stat-number">0%</span>
+                    <span class="stat-label">Done</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Bar -->
+        <div class="progress-wrapper">
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Add Task Section -->
+        <section class="add-task-section">
+            <div class="input-group">
+                <input type="text" id="task-input" class="input-field task-input" placeholder="What needs to be done?" autocomplete="off">
+                <select id="task-priority" class="select-field">
+                    <option value="medium">🟡 Medium</option>
+                    <option value="high">🔴 High</option>
+                    <option value="low">🟢 Low</option>
+                </select>
+                <select id="task-category" class="select-field">
+                    <option value="personal">👤 Personal</option>
+                    <option value="work">💼 Work</option>
+                    <option value="study">📚 Study</option>
+                    <option value="shopping">🛒 Shopping</option>
+                    <option value="health">💪 Health</option>
+                    <option value="others">📌 Others</option>
+                </select>
+                <button id="add-task-btn" class="btn btn-primary add-btn">+ Add</button>
+            </div>
+        </section>
+
+        <!-- Search & Filter Section -->
+        <section class="filter-section">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" class="input-field search-input" placeholder="Search tasks...">
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="pending">Pending</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+                <button class="filter-btn" data-filter="high">🔴 High</button>
+            </div>
+            <button id="clear-all-btn" class="btn btn-danger clear-btn">🗑️ Clear All</button>
+        </section>
+
+        <!-- Task List -->
+        <section class="task-list-section">
+            <ul id="task-list" class="task-list"></ul>
+            <!-- Empty State -->
+            <div id="empty-state" class="empty-state">
+                <div class="empty-illustration">📝</div>
+                <h3>No Tasks Yet</h3>
+                <p>Add your first task to get started!</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Made with ❤️ using HTML, CSS & JavaScript</p>
+        </footer>
+    </div>
+
+    <script type="module" src="./script.js"></script>
+</body>
+
+</html>
